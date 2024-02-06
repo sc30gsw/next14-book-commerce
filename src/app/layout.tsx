@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import './globals.css'
 
+import { Header } from '@/components/Header'
 import type { Metadata } from 'next'
 import { Noto_Sans_JP } from 'next/font/google'
 
@@ -14,7 +15,10 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html lang="ja">
-      <body className={notoSansJp.className}>{children}</body>
+      <body className={notoSansJp.className}>
+        <Header />
+        {children}
+      </body>
     </html>
   )
 }
