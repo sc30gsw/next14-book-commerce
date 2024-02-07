@@ -20,7 +20,7 @@ const input = tv({
 })
 
 type InputProps<T extends FieldValues> = {
-  id: string
+  id: ComponentProps<'input'>['id']
   type: ComponentProps<'input'>['type']
   name: Path<T>
   control: Control<T>
