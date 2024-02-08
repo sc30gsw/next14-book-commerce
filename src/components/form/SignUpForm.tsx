@@ -3,6 +3,11 @@
 import React, { useTransition } from 'react'
 
 import { signUp } from '@/actions/signUp'
+import { useProviderSignIn } from '@/hooks/useProviderSignIn'
+import {
+  SignUpFormInput,
+  signUpFromSchema,
+} from '@/types/schemas/SignUpFormInput'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
@@ -11,11 +16,6 @@ import toast from 'react-hot-toast'
 import { FaGithub } from 'react-icons/fa'
 import { IoMdSend } from 'react-icons/io'
 import { tv } from 'tailwind-variants'
-import { useProviderSignIn } from '../../hooks/useProviderSignIn'
-import {
-  SignUpFormInput,
-  signUpFromSchema,
-} from '../../types/schemas/SignUpFormInput'
 import { Button } from '../Button'
 import { Input } from '../Input'
 
