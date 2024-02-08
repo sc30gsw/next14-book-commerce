@@ -1,3 +1,5 @@
+import { authOptions } from '@/libs/authOptions'
+import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -10,6 +12,7 @@ const header = tv({
     title: 'text-xl font-bold',
     linkWrapper: 'gap-1',
     link: 'text-gray-300 px-3 py-2 rounded-md text-sm font-medium hover:text-white',
+    image: 'rounded-full',
   },
   compoundSlots: [
     {
@@ -19,8 +22,10 @@ const header = tv({
   ],
 })
 
-export const Header = () => {
-  const { base, navigation, title, linkWrapper, link } = header()
+export const Header = async () => {
+  const { base, navigation, title, linkWrapper, link, image } = header()
+
+  const session = await getServerSession(authOptions)
 
   return (
     <header className={base()}>
@@ -32,22 +37,22 @@ export const Header = () => {
           <Link href="/" className={link()}>
             ホーム
           </Link>
-          <Link href={'/profile'} className={link()}>
-            ログイン
-          </Link>
-
-          {/* <Link
-            href={'/api/auth/signout?callbackUrl=/'}
-            className={link()}
-          >
-            ログアウト
-          </Link> */}
+          {session?.user ? (
+            <Link href={'/profile'} className={link()}>
+              {session.user.name}
+            </Link>
+          ) : (
+            <Link href={'/login'} className={link()}>
+              ログイン
+            </Link>
+          )}
           <Link href={'/profile'}>
             <Image
               width={50}
               height={50}
+              className={image()}
               alt="profile_icon"
-              src={'/default_icon.png'}
+              src={session?.user?.image || '/default_icon.png'}
             />
           </Link>
         </div>
