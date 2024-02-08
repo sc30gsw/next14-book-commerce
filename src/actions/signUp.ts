@@ -1,13 +1,13 @@
 'use server'
 
 import { prisma } from '@/libs/db'
+import { handleError } from '@/libs/utils'
 import { ActionsResult } from '@/types/ActionResult'
 import {
   SignUpFormInput,
   signUpFromSchema,
 } from '@/types/schemas/SignUpFormInput'
 import bcrypt from 'bcryptjs'
-import { handleError } from '../libs/utils'
 
 export const signUp = async (data: SignUpFormInput): Promise<ActionsResult> => {
   const result = signUpFromSchema.safeParse(data)
