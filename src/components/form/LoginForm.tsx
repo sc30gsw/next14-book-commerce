@@ -70,6 +70,7 @@ export const LoginForm = () => {
         toast.success('ログインに成功しました')
         reset()
         router.push('/')
+        router.refresh()
       } catch (error) {
         handleError(error)
 
