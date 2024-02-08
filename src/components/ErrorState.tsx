@@ -13,12 +13,12 @@ const errorState = tv({
   },
 })
 
-type ErrorStateProps = {
+type ErrorStateProps = Readonly<{
   title?: string
   subtitle?: string
   showReset?: boolean
   onClick: () => void
-}
+}>
 
 export const ErrorState: FC<ErrorStateProps> = ({
   title = 'Something Went Wrong',

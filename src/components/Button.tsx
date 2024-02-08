@@ -36,15 +36,16 @@ const iconStyles = tv({
   },
 })
 
-type ButtonProps = {
+type ButtonProps = Readonly<{
   type: ComponentProps<'button'>['type']
   icon?: IconType
   submitIcon?: IconType
   text: string
   disabled?: boolean
   onClick?: ComponentProps<'button'>['onClick']
-} & VariantProps<typeof buttonStyles> &
-  VariantProps<typeof iconStyles>
+}> &
+  Readonly<VariantProps<typeof buttonStyles>> &
+  Readonly<VariantProps<typeof iconStyles>>
 
 export const Button: FC<ButtonProps> = ({
   type,

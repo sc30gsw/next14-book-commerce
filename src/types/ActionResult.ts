@@ -1,4 +1,4 @@
-export type ActionsResult =
+export type ActionsResult = Readonly<
   | {
       isSuccess: true
       message: string
@@ -9,3 +9,4 @@ export type ActionsResult =
         message: string
       }
     }
+>
