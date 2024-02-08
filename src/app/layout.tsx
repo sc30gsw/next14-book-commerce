@@ -4,6 +4,7 @@ import './globals.css'
 import { Header } from '@/components/Header'
 import type { Metadata } from 'next'
 import { Noto_Sans_JP } from 'next/font/google'
+import { ToasterProvider } from './providers/ToasterProvider'
 
 const notoSansJp = Noto_Sans_JP({ subsets: ['latin'], weight: ['400'] })
 
@@ -16,6 +17,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html lang="ja">
       <body className={notoSansJp.className}>
+        <ToasterProvider />
         <Header />
         {children}
       </body>
