@@ -1,8 +1,10 @@
-import { authOptions } from '@/libs/authOptions'
-import { getServerSession } from 'next-auth'
+'use client'
+
+import { Session } from 'next-auth'
+import { signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 const header = tv({
@@ -22,10 +24,10 @@ const header = tv({
   ],
 })
 
-export const Header = async () => {
-  const { base, navigation, title, linkWrapper, link, image } = header()
+type HeaderProps = Readonly<{ session?: Session | null }>
 
-  const session = await getServerSession(authOptions)
+export const Header: FC<HeaderProps> = async ({ session }) => {
+  const { base, navigation, title, linkWrapper, link, image } = header()
 
   return (
     <header className={base()}>
@@ -34,13 +36,17 @@ export const Header = async () => {
           Book Commerce
         </Link>
         <div className={linkWrapper()}>
-          <Link href="/" className={link()}>
-            ホーム
+          <Link href={session?.user ? '/profile' : '/'} className={link()}>
+            {session?.user?.name || 'ホーム'}
           </Link>
           {session?.user ? (
-            <Link href={'/profile'} className={link()}>
-              {session.user.name}
-            </Link>
+            <button
+              type="button"
+              className={link()}
+              onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
+            >
+              ログアウト
+            </button>
           ) : (
             <Link href={'/login'} className={link()}>
               ログイン
