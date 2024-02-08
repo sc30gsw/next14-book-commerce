@@ -11,6 +11,7 @@ import toast from 'react-hot-toast'
 import { FaGithub } from 'react-icons/fa'
 import { IoMdSend } from 'react-icons/io'
 import { tv } from 'tailwind-variants'
+import { useProviderSignIn } from '../../hooks/useProviderSignIn'
 import {
   SignUpFormInput,
   signUpFromSchema,
@@ -30,6 +31,8 @@ export const SignUpForm = () => {
   const { base, linkWrapper, link } = signUpForm()
 
   const [isPending, startTransition] = useTransition()
+
+  const { isLoading, providerSignIn } = useProviderSignIn()
 
   const {
     handleSubmit,
@@ -79,7 +82,7 @@ export const SignUpForm = () => {
           error={errors.name?.message}
           label="ユーザー名"
           placeholder="Name"
-          disabled={isPending}
+          disabled={isPending || isLoading}
         />
         <Input
           id="email"
@@ -89,7 +92,7 @@ export const SignUpForm = () => {
           error={errors.email?.message}
           label="メールアドレス"
           placeholder="Email"
-          disabled={isPending}
+          disabled={isPending || isLoading}
         />
         <Input
           id="password"
@@ -99,7 +102,7 @@ export const SignUpForm = () => {
           error={errors.password?.message}
           label="パスワード"
           placeholder="Password"
-          disabled={isPending}
+          disabled={isPending || isLoading}
         />
         <Input
           id="passwordConfirmation"
@@ -109,25 +112,26 @@ export const SignUpForm = () => {
           error={errors.passwordConfirmation?.message}
           label="確認用パスワード"
           placeholder="PasswordConfirmation"
-          disabled={isPending}
+          disabled={isPending || isLoading}
         />
         <div className="w-full mt-4 space-y-4">
           <Button
             type="submit"
             submitIcon={IoMdSend}
             text="新規登録"
-            disabled={isPending}
+            disabled={isPending || isLoading}
             m="l"
-            loading={isPending}
+            loading={isPending || isLoading}
           />
           <Button
             type="button"
             icon={FaGithub}
             text="Githubでログイン"
-            disabled={isPending}
+            disabled={isPending || isLoading}
+            onClick={() => providerSignIn('github')}
             color="secondary"
             m="r"
-            loading={isPending}
+            loading={isPending || isLoading}
           />
         </div>
       </form>
