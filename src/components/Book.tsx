@@ -1,24 +1,26 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
-import { TBook } from '@/app/page'
+import { BookType } from '@/types/Book'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { tv } from 'tailwind-variants'
 
 const bookStyles = tv({
   slots: {
     base: 'flex-col m-4',
-    link: 'cursor-pointer shadow-2xl duration-300 hover:translate-y-1 hover:shadow-none',
+    contentWrapper:
+      'shadow-2xl duration-300 hover:translate-y-1 hover:shadow-none',
     image: 'rounded-t-md',
-    content: 'py-4 bg-slate-100 rounded-b-md',
-    title: 'text-lg font-semibold',
-    description: 'text-lg text-slate-600',
+    content: 'py-4 w-[450px]',
+    title: 'mt-2 text-lg font-semibold whitespace-normal',
     price: 'text-md text-slate-700',
-    modal:
-      'absolute top-0 left-0 right-0 bottom-0 bg-slate-900 bg-opacity-50  justify-center modal animate-fadeIn',
-    modalContent: 'bg-white p-8 rounded-lg',
+    detailButton: 'w-full text-right p-4 border-t',
+    modal: '',
+    modalContent: 'hidden bg-white p-8 rounded-lg',
     modalTitle: 'text-xl mb-4',
     purchaseButton: 'mr-4',
     cancelButton: '',
@@ -34,11 +36,18 @@ const bookStyles = tv({
         cancelButton: 'bg-gray-500 hover:bg-gray-700',
       },
     },
+    modalOpen: {
+      true: {
+        modal:
+          'absolute top-0 left-0 right-0 bottom-0 bg-slate-900 bg-opacity-50  justify-center modal animate-fadeIn',
+        modalContent: 'block',
+      },
+    },
   },
   compoundSlots: [
     { slots: ['base', 'modal'], class: 'flex items-center' },
-    { slots: ['title', 'description'], class: 'mt-2' },
     { slots: ['content', 'purchaseButton', 'cancelButton'], class: 'px-4' },
+    { slots: ['content', 'detailButton'], class: 'bg-slate-100 rounded-b-md' },
     {
       slots: ['purchaseButton', 'cancelButton'],
       class: 'text-white font-bold py-2 rounded',
@@ -46,19 +55,19 @@ const bookStyles = tv({
   ],
 })
 
-type BookProps = {
-  book: TBook
-}
+type BookProps = Readonly<{
+  book: BookType
+}>
 
 export const Book: FC<BookProps> = ({ book }) => {
   const {
     base,
-    link,
+    contentWrapper,
     image,
     content,
     title,
-    description,
     price,
+    detailButton,
     modal,
     modalContent,
     modalTitle,
@@ -66,41 +75,70 @@ export const Book: FC<BookProps> = ({ book }) => {
     cancelButton,
   } = bookStyles()
 
+  const router = useRouter()
+
+  const { data: session } = useSession()
+
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleClick = () => {
+    setIsOpen(true)
+  }
+
+  const handlePurchase = () => {
+    if (session?.user) {
+      // stripe決済
+    } else {
+      setIsOpen(false)
+      router.push('/login')
+    }
+  }
+
+  const handleCancel = () => {
+    setIsOpen(false)
+  }
+
   return (
     <div className={base()}>
-      <Link href={'/'} className={link()}>
-        <Image
-          priority={true}
-          src={book.thumbnail}
-          alt={book.title}
-          width={450}
-          height={350}
-          className={image()}
-        />
-        <div className={content()}>
-          <h2 className={title()}>{book.title}</h2>
-          <p className={description()}>{book.content}</p>
-          <p className={price()}>値段：{book.price}円</p>
-        </div>
-      </Link>
+      <div className={contentWrapper()}>
+        <Link href={'/'}>
+          <Image
+            priority={true}
+            src={book.thumbnail?.url || ''}
+            alt={book.title}
+            width={450}
+            height={350}
+            className={image()}
+          />
+          <div className={content()}>
+            <h2 className={title()}>{book.title}</h2>
+            <p className={price()}>値段：{book.price}円</p>
+          </div>
+        </Link>
+        <button type="button" onClick={handleClick} className={detailButton()}>
+          今すぐ購入する
+        </button>
+      </div>
 
-      {/* <div className={modal()}>
-        <div className={modalContent()}>
+      <div className={modal({ modalOpen: isOpen })}>
+        <div className={modalContent({ modalOpen: isOpen })}>
           <h3 className={modalTitle()}>本を購入しますか？</h3>
           <button
             type="button"
             className={purchaseButton({ color: 'primary' })}
+            onClick={handlePurchase}
           >
             購入する
           </button>
           <button
             type="button"
             className={cancelButton({ color: 'secondary' })}
+            onClick={handleCancel}
           >
             キャンセル
           </button>
         </div>
-      </div> */}
+      </div>
     </div>
   )
 }
