@@ -1,16 +1,20 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useTransition } from 'react'
 
+import { signUp } from '@/actions/signUp'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { FaGithub } from 'react-icons/fa'
+import { IoMdSend } from 'react-icons/io'
 import { tv } from 'tailwind-variants'
 import {
   SignUpFormInput,
   signUpFromSchema,
-} from '../../schemas/SignUpFormInput'
+} from '../../types/schemas/SignUpFormInput'
 import { Button } from '../Button'
 import { Input } from '../Input'
 
@@ -25,12 +29,12 @@ const signUpForm = tv({
 export const SignUpForm = () => {
   const { base, linkWrapper, link } = signUpForm()
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting, errors },
+    formState: { errors },
     reset,
   } = useForm<SignUpFormInput>({
     resolver: zodResolver(signUpFromSchema),
@@ -42,7 +46,28 @@ export const SignUpForm = () => {
     },
   })
 
-  const onSubmit = () => {}
+  const onSubmit: SubmitHandler<SignUpFormInput> = (data) => {
+    startTransition(async () => {
+      const result = await signUp(data)
+
+      if (!result.isSuccess) {
+        toast.error(result.error.message)
+        return
+      }
+
+      toast.success(result.message)
+
+      await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: true,
+        callbackUrl: '/',
+      })
+
+      reset()
+    })
+  }
+
   return (
     <>
       <form className={base()} onSubmit={handleSubmit(onSubmit)}>
@@ -54,7 +79,7 @@ export const SignUpForm = () => {
           error={errors.name?.message}
           label="ユーザー名"
           placeholder="Name"
-          disabled={isSubmitting}
+          disabled={isPending}
         />
         <Input
           id="email"
@@ -64,7 +89,7 @@ export const SignUpForm = () => {
           error={errors.email?.message}
           label="メールアドレス"
           placeholder="Email"
-          disabled={isSubmitting}
+          disabled={isPending}
         />
         <Input
           id="password"
@@ -74,7 +99,7 @@ export const SignUpForm = () => {
           error={errors.password?.message}
           label="パスワード"
           placeholder="Password"
-          disabled={isSubmitting}
+          disabled={isPending}
         />
         <Input
           id="passwordConfirmation"
@@ -84,16 +109,25 @@ export const SignUpForm = () => {
           error={errors.passwordConfirmation?.message}
           label="確認用パスワード"
           placeholder="PasswordConfirmation"
-          disabled={isSubmitting}
+          disabled={isPending}
         />
         <div className="w-full mt-4 space-y-4">
-          <Button type="submit" text="新規登録" disabled={isSubmitting} />
+          <Button
+            type="submit"
+            submitIcon={IoMdSend}
+            text="新規登録"
+            disabled={isPending}
+            m="l"
+            loading={isPending}
+          />
           <Button
             type="button"
             icon={FaGithub}
             text="Githubでログイン"
-            disabled={isLoading}
+            disabled={isPending}
             color="secondary"
+            m="r"
+            loading={isPending}
           />
         </div>
       </form>
