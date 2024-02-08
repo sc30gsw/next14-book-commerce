@@ -15,8 +15,9 @@ export const signUpFromSchema = z
       .min(8, 'パスワードは8文字以上で入力してくだい')
       .max(128, 'パスワードは128文字以下で入力してください')
       .refine(
-        (password: string) => /^[A-Za-z0-9]+$/.test(password),
-        'パスワードは半角英数字のみで入力してください',
+        (password: string) =>
+          /[A-Za-z]/.test(password) && /[0-9]/.test(password),
+        'パスワードは半角英数字の両方を含めてください',
       ),
     passwordConfirmation: z
       .string()
@@ -24,8 +25,9 @@ export const signUpFromSchema = z
       .max(128, '確認用パスワードは128文字以下で入力してください')
       .refine(
         (passwordConfirmation: string) =>
-          /^[A-Za-z0-9]+$/.test(passwordConfirmation),
-        '確認用パスワードは半角英数字のみで入力してください',
+          /[A-Za-z]/.test(passwordConfirmation) &&
+          /[0-9]/.test(passwordConfirmation),
+        '確認用パスワードは半角英数字の両方を含めてください',
       ),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
