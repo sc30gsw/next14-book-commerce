@@ -30,9 +30,6 @@ const CheckoutSuccessPage = async ({
   const result = await isExistingPurchase(sessionId)
 
   // stripeのsessionまたはsession.client_reference_id・session.metadataが存在しない場合
-  if (!(result.isPurchase || result.isSuccess)) {
-    return redirect('/login')
-  }
 
   // 購入済みの場合
   if (result.isPurchase) {
