@@ -50,7 +50,7 @@ const ProfilePage = async () => {
   const user = session.user
 
   const res = await fetch(`${process.env.APP_ORIGIN}/api/purchase/${user.id}`, {
-    next: { revalidate: 60 },
+    cache: 'no-store',
   })
   const { purchases } = await res.json()
 
