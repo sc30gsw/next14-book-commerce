@@ -13,7 +13,7 @@ export const Book: FC<BookProps> = async ({ book }) => {
   const session = await getServerSession(authOptions)
 
   const res = await fetch(
-    `${process.env.APP_ORIGIN}/api/purchase?userId=${session?.user?.id}&bookId=${book.id}`,
+    `${process.env.APP_ORIGIN}/api/purchase/${session?.user?.id}/${book.id}`,
     { cache: 'no-store' },
   )
   const { purchase } = await res.json()

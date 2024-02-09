@@ -49,10 +49,9 @@ const ProfilePage = async () => {
 
   const user = session.user
 
-  const res = await fetch(
-    `${process.env.APP_ORIGIN}/api/purchase?userId=${user.id}`,
-    { next: { revalidate: 60 } },
-  )
+  const res = await fetch(`${process.env.APP_ORIGIN}/api/purchase/${user.id}`, {
+    next: { revalidate: 60 },
+  })
   const { purchases } = await res.json()
 
   const purchaseDetailBook: BookType[] = await Promise.all(
