@@ -11,6 +11,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { FaGithub } from 'react-icons/fa'
@@ -29,6 +30,8 @@ const signUpForm = tv({
 
 export const SignUpForm = () => {
   const { base, linkWrapper, link } = signUpForm()
+
+  const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
 
@@ -68,6 +71,7 @@ export const SignUpForm = () => {
       })
 
       reset()
+      router.refresh()
     })
   }
 

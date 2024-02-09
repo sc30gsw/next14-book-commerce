@@ -19,7 +19,7 @@ const input = tv({
   compoundSlots: [{ slots: ['labelText', 'errorText'], class: 'text-left' }],
 })
 
-type InputProps<T extends FieldValues> = {
+type InputProps<T extends FieldValues> = Readonly<{
   id: ComponentProps<'input'>['id']
   type: ComponentProps<'input'>['type']
   name: Path<T>
@@ -28,7 +28,7 @@ type InputProps<T extends FieldValues> = {
   label: string
   placeholder: string
   disabled?: boolean
-}
+}>
 
 export const Input = <T extends FieldValues>({
   id,
