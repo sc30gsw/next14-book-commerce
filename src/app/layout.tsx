@@ -21,7 +21,7 @@ const RootLayout = async ({
     <html lang="ja">
       <body className={notoSansJp.className}>
         <ToasterProvider />
-        {header}
+        <div>{header}</div>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
