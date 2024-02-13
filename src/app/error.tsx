@@ -3,8 +3,8 @@
 import { FC, useEffect } from 'react'
 
 import { ErrorState } from '@/components/ErrorState'
+import { authRoutes } from '@/constants/route'
 import { redirect, usePathname } from 'next/navigation'
-import { authRoutes } from '../constants/route'
 
 interface ErrorStateProps {
   error: Error

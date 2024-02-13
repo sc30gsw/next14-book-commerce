@@ -1,7 +1,7 @@
 import React from 'react'
 
+import { LoginForm } from '@/components/form/LoginForm'
 import { tv } from 'tailwind-variants'
-import { LoginForm } from '../../../components/form/LoginForm'
 
 const loginPage = tv(
   {

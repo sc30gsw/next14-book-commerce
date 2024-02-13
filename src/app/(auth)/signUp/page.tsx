@@ -1,7 +1,7 @@
 import React from 'react'
 
+import { SignUpForm } from '@/components/form/SignUpForm'
 import { tv } from 'tailwind-variants'
-import { SignUpForm } from '../../../components/form/SignUpForm'
 
 const signUpPage = tv(
   {
