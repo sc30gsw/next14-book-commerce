@@ -1,11 +1,10 @@
 'use client'
 
-import React, { FC, useState, useTransition } from 'react'
+import React, { FC, ReactNode, useState, useTransition } from 'react'
 
 import { handleError } from '@/libs/utils'
 import { BookType } from '@/types/Book'
 import { Session } from 'next-auth'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
@@ -16,7 +15,6 @@ const bookStyles = tv({
   slots: {
     base: 'flex-col m-4',
     contentWrapper: 'shadow-2xl',
-    image: 'rounded-t-md',
     content: 'py-4 w-[450px]',
     title: 'mt-2 text-lg font-semibold whitespace-normal h-20 mb-2',
     price: 'text-md text-slate-700',
@@ -76,17 +74,18 @@ type BookClientProps = Readonly<{
   book: BookType
   session?: Session | null
   isPurchase?: boolean
+  children?: ReactNode
 }>
 
 export const BookClient: FC<BookClientProps> = ({
   book,
   session,
   isPurchase,
+  children,
 }) => {
   const {
     base,
     contentWrapper,
-    image,
     content,
     title,
     price,
@@ -151,14 +150,7 @@ export const BookClient: FC<BookClientProps> = ({
     <div className={base()}>
       <div className={contentWrapper()}>
         <Link href={'/'}>
-          <Image
-            priority={true}
-            src={book.thumbnail?.url || ''}
-            alt={book.title}
-            width={450}
-            height={350}
-            className={image()}
-          />
+          {children}
           <div className={content()}>
             <h2 className={title()}>{book.title}</h2>
             <p className={price()}>値段：{book.price}円</p>
