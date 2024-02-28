@@ -37,26 +37,24 @@ export const Book: FC<BookProps> = async ({ book }) => {
   const { purchase }: Record<'purchase', Purchase | null> = await res.json()
 
   return (
-    <>
-      <div className={base()}>
-        <div className={contentWrapper()}>
-          <Link href={'/'}>
-            <Image
-              priority={true}
-              src={book.thumbnail?.url || ''}
-              alt={book.title}
-              width={450}
-              height={350}
-              className={image()}
-            />
-            <div className={content()}>
-              <h2 className={title()}>{book.title}</h2>
-              <p className={price()}>値段：{book.price}円</p>
-            </div>
-          </Link>
-          <Modal book={book} session={session} isPurchase={!!purchase} />
-        </div>
+    <div className={base()}>
+      <div className={contentWrapper()}>
+        <Link href={'/'}>
+          <Image
+            priority={true}
+            src={book.thumbnail?.url || ''}
+            alt={book.title}
+            width={450}
+            height={350}
+            className={image()}
+          />
+          <div className={content()}>
+            <h2 className={title()}>{book.title}</h2>
+            <p className={price()}>値段：{book.price}円</p>
+          </div>
+        </Link>
+        <Modal book={book} session={session} isPurchase={!!purchase} />
       </div>
-    </>
+    </div>
   )
 }
