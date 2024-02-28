@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 
 import { authOptions } from '@/libs/authOptions'
 import { BookType } from '@/types/Book'
+import { Purchase } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import { tv } from 'tailwind-variants'
@@ -22,7 +23,8 @@ export const Book: FC<BookProps> = async ({ book }) => {
     `${process.env.APP_ORIGIN}/api/purchase/${session?.user?.id}/${book.id}`,
     { cache: 'no-store' },
   )
-  const { purchase } = await res.json()
+
+  const { purchase }: Record<'purchase', Purchase | null> = await res.json()
 
   return (
     <BookClient book={book} session={session} isPurchase={!!purchase}>

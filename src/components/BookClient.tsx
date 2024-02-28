@@ -47,7 +47,7 @@ const bookStyles = tv({
     modalOpen: {
       true: {
         modal:
-          'absolute top-0 left-0 right-0 bottom-0 bg-slate-900 bg-opacity-50  justify-center modal animate-fadeIn',
+          'fixed inset-0 justify-center bg-slate-900 bg-opacity-50  modal animate-fadeIn',
         modalContent: 'block',
       },
     },
@@ -125,7 +125,7 @@ export const BookClient: FC<BookClientProps> = ({
             }),
           })
 
-          const json = await res.json()
+          const json: Record<'checkoutUrl', string | null> = await res.json()
 
           if (json.checkoutUrl) {
             toast.success('購入に成功しました')

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { isExistingPurchase } from '@/actions/isExistingPurchase'
+import { Purchase } from '@prisma/client'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { tv } from 'tailwind-variants'
@@ -45,7 +46,7 @@ const CheckoutSuccessPage = async ({
     body: JSON.stringify({ sessionId }),
   })
 
-  const { purchase } = await res.json()
+  const { purchase }: Record<'purchase', Purchase> = await res.json()
 
   return (
     <div className={base()}>
