@@ -1,24 +1,19 @@
 'use client'
 
-import React, { FC, ReactNode, useState, useTransition } from 'react'
+import { FC, useState, useTransition } from 'react'
 
 import { handleError } from '@/libs/utils'
 import { BookType } from '@/types/Book'
 import { Session } from 'next-auth'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { AiOutlineLoading } from 'react-icons/ai'
 import { tv } from 'tailwind-variants'
 
-const bookStyles = tv({
+const modalStyles = tv({
   slots: {
-    base: 'flex-col m-4',
-    contentWrapper: 'shadow-2xl',
-    content: 'py-4 w-[450px]',
-    title: 'mt-2 text-lg font-semibold whitespace-normal h-20 mb-2',
-    price: 'text-md text-slate-700',
-    detailButton: 'w-full text-right p-4 border-t hover:underline',
+    detailButton:
+      'w-full text-right p-4 border-t hover:underline bg-slate-100 rounded-b-md',
     modal: '',
     modalContent: 'hidden bg-white p-8 rounded-lg',
     modalTitle: 'text-xl mb-4',
@@ -60,35 +55,22 @@ const bookStyles = tv({
     },
   },
   compoundSlots: [
-    { slots: ['base', 'modal', 'purchaseButton'], class: 'flex items-center' },
-    { slots: ['content', 'purchaseButton', 'cancelButton'], class: 'px-4' },
-    { slots: ['content', 'detailButton'], class: 'bg-slate-100 rounded-b-md' },
+    { slots: ['modal', 'purchaseButton'], class: 'flex items-center' },
     {
       slots: ['purchaseButton', 'cancelButton'],
-      class: 'text-white font-bold py-2 rounded',
+      class: 'px-4 py-2 text-white font-bold rounded',
     },
   ],
 })
 
-type BookClientProps = Readonly<{
+type ModalProps = {
   book: BookType
   session?: Session | null
   isPurchase?: boolean
-  children?: ReactNode
-}>
+}
 
-export const BookClient: FC<BookClientProps> = ({
-  book,
-  session,
-  isPurchase,
-  children,
-}) => {
+export const Modal: FC<ModalProps> = ({ book, session, isPurchase }) => {
   const {
-    base,
-    contentWrapper,
-    content,
-    title,
-    price,
     detailButton,
     modal,
     modalContent,
@@ -97,7 +79,7 @@ export const BookClient: FC<BookClientProps> = ({
     purchaseButton,
     cancelButton,
     icon,
-  } = bookStyles()
+  } = modalStyles()
 
   const router = useRouter()
 
@@ -147,20 +129,10 @@ export const BookClient: FC<BookClientProps> = ({
   }
 
   return (
-    <div className={base()}>
-      <div className={contentWrapper()}>
-        <Link href={'/'}>
-          {children}
-          <div className={content()}>
-            <h2 className={title()}>{book.title}</h2>
-            <p className={price()}>値段：{book.price}円</p>
-          </div>
-        </Link>
-        <button type="button" onClick={handleClick} className={detailButton()}>
-          {isPurchase ? '詳細ページへ' : '今すぐ購入する'}
-        </button>
-      </div>
-
+    <>
+      <button type="button" onClick={handleClick} className={detailButton()}>
+        {isPurchase ? '詳細ページへ' : '今すぐ購入する'}
+      </button>
       <div className={modal({ modalOpen: isOpen })}>
         <div className={modalContent({ modalOpen: isOpen })}>
           <h3 className={modalTitle()}>
@@ -206,6 +178,6 @@ export const BookClient: FC<BookClientProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
