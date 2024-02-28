@@ -5,6 +5,7 @@ import { FC, useState, useTransition } from 'react'
 import { handleError } from '@/libs/utils'
 import { BookType } from '@/types/Book'
 import { Session } from 'next-auth'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { AiOutlineLoading } from 'react-icons/ai'
@@ -140,15 +141,14 @@ export const Modal: FC<ModalProps> = ({ book, session, isPurchase }) => {
           </h3>
           <div className={buttonWrapper()}>
             {isPurchase ? (
-              <button
-                type="button"
+              <Link
+                href={`/book/${book.id}`}
                 className={purchaseButton({
                   color: 'primary',
                 })}
-                onClick={() => router.push(`/book/${book.id}`)}
               >
                 詳細ページへ
-              </button>
+              </Link>
             ) : (
               <button
                 type="button"
